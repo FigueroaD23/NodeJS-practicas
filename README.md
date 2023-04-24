@@ -43,13 +43,14 @@ Dependencies
 ```sh
 npm i express body-parser cookie-parser compression cors
 npm i mongoose
+npm i dotenv --save
 ```
 
 Development dependencies
 
 ```sh
 npm i nodemon typescript ts-node -D
-npm i @types/express @types/body-parser @types/cookie-parser @types/compression @types/cors -D
+npm i @types/express @types/body-parser @types/cookie-parser @types/compression @types/cors @types/mongoose -D
 ```
 
 ## Installation
