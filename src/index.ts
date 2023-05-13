@@ -4,9 +4,9 @@ import bodyParser from 'body-parser';
 import cookieParser from 'cookie-parser';
 import compression from 'compression';
 import cors from 'cors';
-import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 import userRoutes from './routes/user';
+import { mongoConnection } from '../src/db/connection/index';
 
 
 const app = express();
@@ -31,15 +31,15 @@ app.get('/', (req, res) => {
     });
 });
 
+//connect to mongodb
+app.use(async function (req, res, next) {
+    console.time('DB_Connection')
+    await mongoConnection()
+    console.timeEnd('DB_Connection')
+    next()
+})
 app.use('/api', userRoutes);
 
-//connect to mongodb
-mongoose.connect(process.env.MONGO_DB_URI || '').then(() => {
-    console.log("conected to mongodb")
-}).catch((err) => {
-    console.log("error", err)
-}
-);
 
 //port
 server.listen(port, () => console.log(`Server is running on http://localhost:${port}`));
