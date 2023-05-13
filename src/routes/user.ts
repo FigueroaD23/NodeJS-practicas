@@ -1,18 +1,39 @@
 import express from 'express';
-import userSchema from './models/user';
+import { createUser, getAllUsers, getUserById, updateUserById } from './models/user';
 
 const router = express.Router();
 
-router.get('/users', (req, res) => {
-    userSchema.find().then((users) => {
+router.get('/users', async (req, res) => {
+    console.log(req.body)
+    try {
+        const users = await getAllUsers()
         res.json(users);
-    }).catch((err) => {
-        console.log(err);
+    } catch (error) {
+        console.log(error);
     }
-    );
 });
 
-router.get('/user/:id', (req, res) => {
+router.get('/user/:id', async (req, res) => {
+    try {
+        const user = await getUserById(req.params.id)
+        res.json(user);
+    } catch (error) {
+        console.log(error);
+    }
+});
+
+router.post('/user', async (req, res) => {
+    console.log(req.body)
+    const resCreateUser = await createUser(req.body)
+    res.json({ message: 'User created', status: 200, data: resCreateUser });
+});
+
+router.put('/update/user/:id', async (req, res) => {
+    const resUpdateUser = await updateUserById(req.params.id, req.body)
+    res.json({ message: 'User updated', status: 200, data: resUpdateUser });
+});
+
+/* router.get('/user/:id', (req, res) => {
     const { id } = req.params;
     userSchema.findById(id).then((users) => {
         res.json(users);
@@ -22,14 +43,6 @@ router.get('/user/:id', (req, res) => {
     );
 });
 
-router.post('/user', (req, res) => {
-    const user = new userSchema(req.body);
-    user.save().then((user) => {
-        res.json(user);
-    }).catch((err) => {
-        console.log(err);
-    }
-    );
-});
+ */
 
 export default router;
