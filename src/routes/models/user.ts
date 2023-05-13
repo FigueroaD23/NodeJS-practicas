@@ -26,5 +26,8 @@ export const createUser = (values: Record<string, unknown>) => UserModel.create(
 } */
 //findByIdAndUpdate actualiza los documentos y devuelve el documento original antes de la actualización
 export const updateUserById = (id: string, values: Record<string, any>) => UserModel.findByIdAndUpdate(id, { $set: { ...values } });
-    //return UserModel.findByIdAndUpdate(id,values);
+//return UserModel.findByIdAndUpdate(id,values);
+/* Si solo necesitas eliminar un documento y obtener su contenido, puedes usar findOneAndDelete (opciones adicionales, como sort, projection).
+Si deseas eliminar múltiples documentos sin obtener su contenido, remove puede ser más apropiado.*/
+export const deleteUserById = (id: string) => UserModel.findByIdAndDelete({ _id: id });
 
