@@ -1,8 +1,10 @@
 import mongoose from 'mongoose';
-
+let connection: any = null;
 export const mongoConnection = async () => {
     try {
-        await mongoose.connect(process.env.MONGO_DB_URI || '')
+        if (!connection) {
+            connection = await mongoose.connect(process.env.MONGO_DB_URI || '')
+        }
     }
     catch (error) {
         console.log(error);

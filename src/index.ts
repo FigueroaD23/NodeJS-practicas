@@ -15,9 +15,9 @@ dotenv.config();
 //middlewares
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(cookieParser());
-app.use(compression());
-app.use(cors({ origin: 'http://localhost:3000', credentials: true }));
+app.use(cookieParser()); // read cookies (needed for auth)
+app.use(compression()); //Compress all routes
+app.use(cors({ origin: 'http://localhost:3000', credentials: true })); //allow cross origin requests
 
 const server = http.createServer(app);
 
@@ -32,12 +32,14 @@ app.get('/', (req, res) => {
 });
 
 //connect to mongodb
-app.use(async function (req, res, next) {
-    console.time('DB_Connection')
-    await mongoConnection()
-    console.timeEnd('DB_Connection')
-    next()
-})
+app.use(
+    async (req, res, next) => {
+        console.log(req)
+        await mongoConnection()
+        next()
+    }
+)
+//mongoConnection().then(() => console.log('MongoDB Connected')).catch((err) => console.log(err));
 app.use('/api', userRoutes);
 
 
