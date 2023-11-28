@@ -8,7 +8,6 @@ import dotenv from 'dotenv';
 import userRoutes from './routes/user';
 import { mongoConnection } from '../src/db/connection/index';
 
-
 const app = express();
 dotenv.config();
 
@@ -20,30 +19,19 @@ app.use(compression()); //Compress all routes
 app.use(cors({ origin: 'http://localhost:3000', credentials: true })); //allow cross origin requests
 
 const server = http.createServer(app);
-
-
 const port = process.env.PORT || 3002;
 
-//routes
-app.get('/', (req, res) => {
-    res.json({
-        env: `process.env.MONGO_DB_URI: ${process.env.MONGO_DB_URI}`
-    });
+//connect to mongodb
+app.use(async (req, res, next) => {
+    console.log('connecting to mongodb');
+    await mongoConnection();
+    next();
 });
 
-//connect to mongodb
-app.use(
-    async (req, res, next) => {
-        console.log(req)
-        await mongoConnection()
-        next()
-    }
-)
-//mongoConnection().then(() => console.log('MongoDB Connected')).catch((err) => console.log(err));
+//routes
 app.use('/api', userRoutes);
+app.get('/', (req, res) => {
+    res.json({ env: `process.env.MONGO_DB_URI: ${process.env.MONGO_DB_URI}` });
+});
 
-
-//port
 server.listen(port, () => console.log(`Server is running on http://localhost:${port}`));
-
-
